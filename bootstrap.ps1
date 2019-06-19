@@ -1,6 +1,6 @@
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-$url = 'https://codeload.github.com/fdcastel/Hyper-V-Automation/zip/master'
+$url = 'https://codeload.github.com/Exman/Hyper-V-Automation/zip/master'
 $fileName = Join-Path $env:TEMP 'Hyper-V-Automation-master.zip'
 
 Invoke-RestMethod $url -OutFile $fileName
