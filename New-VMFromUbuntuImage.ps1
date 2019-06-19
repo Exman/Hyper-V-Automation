@@ -36,6 +36,8 @@ param(
 
     [string]$InterfaceName = 'eth0',
 
+    [int64]$VlanId,
+
     [Parameter(Mandatory=$false, ParameterSetName='RootPassword')]
     [Parameter(Mandatory=$false, ParameterSetName='RootPublicKey')]
     [Parameter(Mandatory=$true, ParameterSetName='EnableRouting')]
@@ -112,6 +114,9 @@ if ($MacAddress) {
 }
 $eth0 = Get-VMNetworkAdapter -VMName $VMName 
 $eth0 | Rename-VMNetworkAdapter -NewName $InterfaceName
+if ($VlanId -ne $null) {
+    $eth0 | Set-VMNetworkAdapterVlan -VlanId $VlanId -Access
+}
 
 if ($SecondarySwitchName) {
     # Add secondary network adapter
