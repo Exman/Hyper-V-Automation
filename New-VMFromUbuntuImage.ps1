@@ -77,7 +77,7 @@ $metadataIso = Join-Path $vmmsSettings.DefaultVirtualHardDiskPath "$VMName-metad
 Write-Verbose 'Creating VHDX from cloud image...'
 $ErrorActionPreference = 'Continue'
 & {
-    & qemu-img.exe convert -f qcow2 $SourcePath -O vhdx -o subformat=dynamic $vhdxPath
+    & .\qemu-img-win-x64-2_3_0\qemu-img.exe convert -f qcow2 $SourcePath -O vhdx -o subformat=dynamic $vhdxPath
     if ($LASTEXITCODE -ne 0) {
         throw "qemu-img returned $LASTEXITCODE. Aborting."
     }
