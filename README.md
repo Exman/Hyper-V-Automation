@@ -149,12 +149,6 @@ New-VMFromUbuntuImage.ps1 -SourcePath <string> -VMName <string> -RootPublicKey <
 
 Creates a Ubuntu VM from Ubuntu Cloud image. For Ubuntu 18.04 LTS only.
 
-You must have [qemu-img](https://cloudbase.it/qemu-img-windows/) installed. If you have [chocolatey](https://chocolatey.org/) you can install it with:
-
-```
-choco install qemu-img -y
-```
-
 You can download Ubuntu cloud images from [here](https://cloud-images.ubuntu.com/releases/18.04/release/) (get the AMD64 IMG version). Or just use `Get-UbuntuImage.ps1`.
 
 You must use `-RootPassword` to set a password or `-RootPublicKey` to set a public key for default `ubuntu` user.
