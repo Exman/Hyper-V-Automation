@@ -94,7 +94,7 @@ Write-Verbose 'Creating VM...'
 $vm = New-VM -Name $VMName -Generation 2 -MemoryStartupBytes $MemoryStartupBytes -VHDPath $vhdxPath -SwitchName $SwitchName
 $vm | Set-VMProcessor -Count $ProcessorCount
 #$vm | Get-VMIntegrationService -Name "Guest Service Interface" | Enable-VMIntegrationService
-$vm | Get-VMIntegrationService -Name "Интерфейс гостевой службы" | Enable-VMIntegrationService
+$vm | Get-VMIntegrationService -Name "РРЅС‚РµСЂС„РµР№СЃ РіРѕСЃС‚РµРІРѕР№ СЃР»СѓР¶Р±С‹" | Enable-VMIntegrationService
 if ($EnableDynamicMemory) {
     $vm | Set-VMMemory -DynamicMemoryEnabled $true 
 }
