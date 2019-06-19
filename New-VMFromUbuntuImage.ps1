@@ -95,6 +95,9 @@ $vm | Get-VMIntegrationService -Name "Guest Service Interface" | Enable-VMIntegr
 if ($EnableDynamicMemory) {
     $vm | Set-VMMemory -DynamicMemoryEnabled $true 
 }
+else {
+    $vm | Set-VMMemory -DynamicMemoryEnabled $false
+}
 # Sets Secure Boot Template. 
 #   Set-VMFirmware -SecureBootTemplate 'MicrosoftUEFICertificateAuthority' doesn't work anymore (!?).
 $vm | Set-VMFirmware -SecureBootTemplateId ([guid]'272e7447-90a4-4563-a4b9-8e4ab00526ce')
