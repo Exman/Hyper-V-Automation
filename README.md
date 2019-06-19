@@ -2,7 +2,9 @@
 
 Collection of Powershell scripts to create Windows and Ubuntu VMs in Hyper-V.
 
-For Windows Server 2016 / Hyper-V Server 2016 / Windows 10 / 8.1 only.
+Tested on:
+Windows Server 2019
+Windows 10 (1809)
 
 For Hyper-V Generation 2 VMs only.
 
