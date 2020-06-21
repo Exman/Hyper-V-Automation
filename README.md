@@ -1,10 +1,8 @@
 # Hyper-V automation scripts
 
-Collection of Powershell scripts to create Windows and Ubuntu VMs in Hyper-V.
+Collection of Powershell scripts to create Windows, Ubuntu and Debian VMs in Hyper-V.
 
-Tested on:
-Windows Server 2019
-Windows 10 (1809)
+For Windows Server 2016/2019, Windows 8.1/10 only.
 
 For Hyper-V Generation 2 VMs only.
 
@@ -30,6 +28,9 @@ iex (iwr 'http://gsi.ms/h-v-a')
   - For Ubuntu VMs
     - [Get-UbuntuImage](#Get-UbuntuImage)
     - [New-VMFromUbuntuImage](#New-VMFromUbuntuImage-) (*)
+  - For Debian VMs
+    - [Get-DebianImage](#Get-DebianImage)
+    - [New-VMFromDebianImage](#New-VMFromDebianImage-) (*)
   - For any VMs
     - [Move-VMOffline](#move-vmoffline)
 
@@ -126,12 +127,14 @@ Remove-PSSession -Session $sess
 ### Get-UbuntuImage
 
 ```
-Get-UbuntuImage.ps1 [[-OutputPath] <string>] [<CommonParameters>]
+Get-UbuntuImage.ps1 [[-OutputPath] <string>] [-Previous] [<CommonParameters>]
 ```
 
-Downloads latest Ubuntu 18.04 LTS cloud image and verify its integrity.
+Downloads latest Ubuntu 20.04 LTS cloud image and verify its integrity.
 
 Use `-OutputPath` parameter to set download location. If not informed, the current folder will be used.
+
+Use `-Previous` parameter to download Ubuntu 18.04 LTS image instead of 20.04 LTS.
 
 Returns the path for downloaded file.
 
@@ -151,6 +154,12 @@ New-VMFromUbuntuImage.ps1 -SourcePath <string> -VMName <string> -RootPublicKey <
 
 Creates a Ubuntu VM from Ubuntu Cloud image. For Ubuntu 18.04 LTS only.
 
+You must have [qemu-img](https://cloudbase.it/qemu-img-windows/) installed. If you have [chocolatey](https://chocolatey.org/) you can install it with:
+
+```
+choco install qemu-img -y
+```
+
 You can download Ubuntu cloud images from [here](https://cloud-images.ubuntu.com/releases/18.04/release/) (get the AMD64 IMG version). Or just use `Get-UbuntuImage.ps1`.
 
 You must use `-RootPassword` to set a password or `-RootPublicKey` to set a public key for default `ubuntu` user.
@@ -158,6 +167,62 @@ You must use `-RootPassword` to set a password or `-RootPublicKey` to set a publ
 You may configure network using `-IPAddress`, `-Gateway` and `-DnsAddresses` options. `-IPAddress` must be in `address/prefix` format. If not specified the network will be configured via DHCP.
 
 You may rename interfaces with `-InterfaceName` and `-SecondaryInterfaceName`. This will set Hyper-V network adapter name and also set the interface name in Ubuntu.
+
+You may add a second network using `-SecondarySwitchName`. You may configure it with `-Secondary*` options.
+
+You may configure it as a router using `-EnableRouting` switch. In this case you must inform a second network using `-SecondarySwitchName` (which will be the LAN segment).
+
+You may install Docker using `-InstallDocker` switch.
+
+Returns the `VirtualMachine` created.
+
+**(*) Requires administrative privileges**.
+
+
+
+## For Debian VMs
+
+### Get-DebianImage
+
+```
+Get-DebianImage.ps1 [[-OutputPath] <string>] [<CommonParameters>]
+```
+
+Downloads latest Debian 10 cloud image.
+
+**IMPORTANT:** Unlike `Get-UbuntuImage.ps1`, this script doesn't check the integrity of the downloaded file.
+
+Use `-OutputPath` parameter to set download location. If not informed, the current folder will be used.
+
+Returns the path for downloaded file.
+
+
+
+### New-VMFromDebianImage (*)
+
+```
+New-VMFromDebianImage.ps1 -SourcePath <string> -VMName <string> -RootPassword <string> [-FQDN <string>] [-VHDXSizeBytes <uint64>] [-MemoryStartupBytes <long>] [-EnableDynamicMemory] [-ProcessorCount <long>] [-SwitchName <string>] [-MacAddress <string>] [-IPAddress <string>] [-Gateway <string>] [-DnsAddresses <string[]>] [-InterfaceName <string>] [-EnableRouting] [-SecondarySwitchName <string>] [-SecondaryMacAddress <string>] [-SecondaryIPAddress <string>] [-SecondaryInterfaceName <string>] [-LoopbackIPAddress <string>] [-InstallDocker] [<CommonParameters>]
+New-VMFromDebianImage.ps1 -SourcePath <string> -VMName <string> -RootPublicKey <string> [-FQDN <string>] [-VHDXSizeBytes <uint64>] [-MemoryStartupBytes <long>] [-EnableDynamicMemory] [-ProcessorCount <long>] [-SwitchName <string>] [-MacAddress <string>] [-IPAddress <string>] [-Gateway <string>] [-DnsAddresses <string[]>] [-InterfaceName <string>] [-EnableRouting] [-SecondarySwitchName <string>] [-SecondaryMacAddress <string>] [-SecondaryIPAddress <string>] [-SecondaryInterfaceName <string>] [-LoopbackIPAddress <string>] [-InstallDocker] [<CommonParameters>]
+New-VMFromDebianImage.ps1 -SourcePath <string> -VMName <string> -EnableRouting -SecondarySwitchName <string> [-FQDN <string>] [-VHDXSizeBytes <uint64>] [-MemoryStartupBytes <long>] [-EnableDynamicMemory] [-ProcessorCount <long>] [-SwitchName <string>] [-MacAddress <string>] [-IPAddress <string>] [-Gateway <string>] [-DnsAddresses <string[]>] [-InterfaceName <string>] [-SecondaryMacAddress <string>] [-SecondaryIPAddress <string>] [-SecondaryInterfaceName <string>] [-LoopbackIPAddress <string>] [-InstallDocker] [<CommonParameters>]
+```
+
+Creates a Debian VM from Debian Cloud image. For Debian 10 only.
+
+**IMPORTANT:** Unlike `New-VMFromUbuntuImage.ps1`, this script create VMs with **Secure Boot disabled** (Debian 10 should support it, but I cannot make it work).
+
+You must have [qemu-img](https://cloudbase.it/qemu-img-windows/) installed. If you have [chocolatey](https://chocolatey.org/) you can install it with:
+
+```
+choco install qemu-img -y
+```
+
+You can download Debian cloud images from [here](https://cloud.debian.org/images/cloud/buster/) (get the `generic-amd64 version`). Or just use `Get-DebianImage.ps1`.
+
+You must use `-RootPassword` to set a password or `-RootPublicKey` to set a public key for default `debian` user.
+
+You may configure network using `-IPAddress`, `-Gateway` and `-DnsAddresses` options. `-IPAddress` must be in `address/prefix` format. If not specified the network will be configured via DHCP.
+
+You may rename interfaces with `-InterfaceName` and `-SecondaryInterfaceName`. This will set Hyper-V network adapter name and also set the interface name in Debian.
 
 You may add a second network using `-SecondarySwitchName`. You may configure it with `-Secondary*` options.
 
